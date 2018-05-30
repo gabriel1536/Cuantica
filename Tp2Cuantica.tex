@@ -1,0 +1,240 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{enumitem}
+\usepackage{physics}
+\usepackage{bm}
+
+\title{Trabajo Práctico 2: Computación Cuántica y Fundamentos de Lenguajes de Programación}
+\author{Gabriel Antelo}
+
+\begin{document}
+\maketitle
+
+\newcommand{\seman}[1]{\llbracket #1 \rrbracket_\theta}
+\newcommand{\semanmod}[2]{\llbracket #1 \rrbracket_{\theta, x = #2}}
+\newcommand{\semanmodd}[3]{\llbracket #1 \rrbracket_{\theta, #2 = #3}}
+\newcommand{\error}{\text{error}}
+\newcommand{\N}{\mathbb N}
+\newcommand{\si}{\text{ si }}
+\newcommand{\letin}[4]{\text{let } #1 : #2 = #3 \text { in } #4}
+\newcommand{\inter}[1]{\llbracket #1 \rrbracket}
+\newcommand{\nat}{\text{nat}}
+\newcommand{\Nbot}{\N\ \cup\ \{ \perp_\N \}}
+\newcommand{\NtoNbot}{(\N \to \N \to N) \cup \{ \perp_{\N \to \N \to \N} \}}
+\newcommand{\ifz}{\textbf {ifz$_1$}}
+\newcommand{\ifzz}{\textbf {ifz$_2$}}
+\newcommand{\FIX}{\text{FIX}}
+\newpage
+\section {Ejercicio 10}
+\textbf{Teorema 3.21}. Para todo operador densidad $\rho$ se tiene \textbf{tr}($\rho^2$) $\leq 1$. 
+Más aún, la igualdad se cumple si y sólo si $\rho$ está en un estado puro. \newline
+\newline
+\textit{Demostración}: \newline
+\begin{align*}
+  \rho = \sum_{i} \rho_i \ket{\Psi} \bra{\Psi}
+\end{align*}
+\begin{align*}
+  \rho^2 &= (\sum_{i} \rho_i \ket{\Psi_i} \bra{\Psi_i}) \text{x} (\sum_{j} \rho_j \ket{\Psi_j} \bra{\Psi_j}) \\ 
+              &= \sum_{i, j} \rho_i \rho_j \bra{\Psi_i}\ket{\Psi_j} \ket{\Psi_i} \bra{\Psi_j}
+\end{align*}
+
+\begin{align*}
+\textbf{Tr}(\rho^2) &=  \sum_{i, j} \rho_i \rho_j \bra{\Psi_i}\ket{\Psi_j} \textbf{Tr}(\ket{\Psi_i} \bra{\Psi_j})\\
+                                 &= \sum_{i, j} \rho_i \rho_j \bra{\Psi_i}\ket{\Psi_j} \ket{\Psi_j} \bra{\Psi_i}\\
+                                 &= \sum_{i, j} \rho_i \rho_j \bra{\Psi_i}\ket{\Psi_j} \bra{\Psi_i} \ket{\Psi_j}^*\\
+                                 &= \sum_{i, j} \rho_i \rho_j \abs{\bra{\Psi_i}\ket{\Psi_j}}^2\\
+                                 &\leq \sum_{i, j} \rho_i \rho_j \underbrace{\bra{\Psi_i}\ket{\Psi_i}}_{\text{= 1}} \underbrace{\bra{\Psi_j}\ket{\Psi_j}}_{\text{= 1}}\\
+                                 &= \sum_{i, j} \rho_i \rho_j = 1 \footnotemark
+\end{align*}\footnotetext{Se puede ver que si es un estado puro, $\rho_i  \text{y}  \rho_j = 1$, de lo contrario, será $\sum_{i, j} \rho_i \rho_j $ con $\rho_i,\rho_j < 1$ y $\sum_{i} \leq 1 \text{,} \sum_{j} \leq 1$}
+\newpage
+
+\section {Ejercicio 14}
+Sean los conjuntos de estados puros: $A= \{(\frac{1}{4}, \ket{0}); (\frac{3}{4}, \ket{+})\}$ y $B = \{(\frac{3}{4}, \ket{1}); (\frac{1}{4}, \ket{-})\}$\\
+\begin{enumerate}[label=(\alph*)]
+\item{Dar la matriz densidad del sistema completo compuesto por ambos sistemas.}\\
+
+\begin{align*}
+\rho^A &= \sum_{i} \rho_i \ket{\Psi} \bra{\Psi} = \frac{1}{4}(\ket{0}\bra{0}) \bm{+} \frac{3}{4}(\ket{+}\bra{+})\\
+            &= \frac{1}{4}(\ket{0}\bra{0}) \bm{+}  \frac{3}{8}((\ket{0} \bm{+} \ket{1}) (\bra{0} \bm{+} \bra{1}))\\
+            &= \frac{1}{4}(\ket{0}\bra{0}) \bm{+}  \frac{3}{8}( \ket{0}\bra{0} \bm{+} \ket{0}\bra{1} \bm{+} \ket{1}\bra{0} \bm{+} \ket{1}\bra{1})\\
+            &= \frac{5}{8}(\ket{0}\bra{0}) \bm{+} \frac{3}{8}(\ket{0}\bra{1}) \bm{+} \frac{3}{8}(\ket{1}\bra{0}) \bm{+} \frac{3}{8}(\ket{1}\bra{1})
+\end{align*}
+
+\begin{align*}
+\rho^B &= \frac{3}{4}(\ket{1}\bra{1}) \bm{+} \frac{1}{4}(\ket{-}\bra{-})\\
+            &= \frac{3}{4}(\ket{1}\bra{1}) \bm{+}  \frac{1}{8}((\ket{0} \bm{-} \ket{1}) (\bra{0} \bm{-} \bra{1}))\\
+            &= \frac{3}{4}(\ket{1}\bra{1}) \bm{+}  \frac{1}{8}( \ket{0}\bra{0} \bm{-} \ket{0}\bra{1} \bm{-} \ket{1}\bra{0} \bm{+} \ket{1}\bra{1})\\
+            &= \frac{1}{8}(\ket{0}\bra{0}) \bm{-} \frac{1}{8}(\ket{0}\bra{1}) \bm{-} \frac{1}{8}(\ket{1}\bra{0}) \bm{+} \frac{7}{8}(\ket{1}\bra{1})
+\end{align*}
+
+La matriz densidad del sistema completo compuesto por ambos sistemas, $\rho^{AB}$, se forma con el producto de kroneker de las matrices de densidad de los sistemas.\\
+\[
+\rho^{AB} = \rho^A \otimes \rho^B
+\]
+
+\begin{align*}
+\rho^{AB} &= \frac{1}{64}(5\ket{00}\bra{00} \bm{-} 5\ket{00}\bra{01} \bm{+} 3\ket{00}\bra{10} \bm{-} 3\ket{00}\bra{11}\\
+	       &= \bm{-} 5\ket{01}\bra{00} \bm{+} 35\ket{01}\bra{01} \bm{-} 3\ket{01}\bra{10} \bm{+} 21\ket{01}\bra{11}\\
+	       &= \bm{+} 3\ket{10}\bra{00} \bm{-} 3\ket{10}\bra{01} \bm{+} 3\ket{10}\bra{10} \bm{-} 3\ket{10}\bra{11}\\
+	       &= \bm{-} 3\ket{11}\bra{00} \bm{+} 21\ket{11}\bra{01} \bm{-} 3\ket{11}\bra{10} \bm{+} 21\ket{11}\bra{11})
+\end{align*}
+
+\begin{align*}
+\rho^{AB} = \frac{1}{64}
+  \begin{bmatrix}
+    5 & -5 & 3 & -3 \\
+    -5 & 35 & -3 & 21 \\
+    3 & -3 & 3 & -3 \\
+    -3 & 21 & -3 & 21 
+  \end{bmatrix}
+\end{align*}
+\[
+\text{Con } \textbf{Tr}(\rho^{AB}) = 1.
+\]
+\newpage
+
+\item{Utilizando el la medición $\{\ket{00}\bra{00}, \ket{11}\bra{11}, \ket{01}\bra{01}, \ket{10}\bra{10}\}$, dar los posibles resultados de la medición con sus probabilidades y el estado final del sistema en cada caso.}\\
+
+\begin{align*}
+p(1) &= \textbf{Tr}(\ket{00}\underbrace{\bra{00}\ket{00}}_{\text{ = 1}}\bra{00}\rho)\\
+        &= \textbf{Tr}(\ket{00}\bra{00}\rho) =\footnotemark \bra{00} \rho \ket{00}\\
+        &= \frac{5}{64}
+\end{align*}\footnotetext{Usando Corolario 3.14 y propiedad 1 de traza de una matriz}
+
+\begin{align*}
+m_1 & = \frac{\ket{00}\overbrace{\bra{00} \rho \ket{00}}^{\text{$= \frac{5}{64}$}}\bra{00}}{\frac{5}{64}}\\
+        & = \ket{00}\bra{00}
+\end{align*}
+
+\[
+p(2) = \textbf{Tr}(\ket{11}\underbrace{\bra{11}\ket{11}}_{\text{ = 1}}\bra{11}\rho) = \frac{21}{64}
+\]
+\[
+p(3) = \textbf{Tr}(\ket{01}\underbrace{\bra{01}\ket{01}}_{\text{ = 1}}\bra{01}\rho) = \frac{35}{64}
+\]
+\[
+p(4) = \textbf{Tr}(\ket{10}\underbrace{\bra{10}\ket{10}}_{\text{ = 1}}\bra{10}\rho) = \frac{3}{64}
+\]
+\[
+m_2 = \ket{11}\bra{11}
+\]
+\[
+m_3 = \ket{01}\bra{01}
+\]
+\[
+m_4 = \ket{10}\bra{10}
+\]
+
+Estado final del sistema: \\
+\[
+\{\frac{5}{64}(\ket{00}\bra{00}), \frac{21}{64}(\ket{11}\bra{11}), \frac{35}{64}(\ket{01}\bra{01}), \frac{3}{64}(\ket{10}\bra{10})\}
+\]
+
+\end{enumerate}
+\newpage
+
+\section {Ejercicio Extra - Descomposición de Schmidt}
+  \begin{enumerate}[label=(\alph*)]
+    \item{Mostramos la descomposición para $B_{00}$ (el del ejemplo) paso a paso}\\
+    
+    Queremos llegar a:\\
+    \begin{align*}
+        \beta_{00} &= \sum_{j,k} a_{jk} \ket{j}\ket{k}\\
+        \intertext{Siendo $\ket{j}, \ket{k}$ bases ortonormales}
+        \intertext{Por la descomposición en valores singulares, $a = udv$, nos queda}
+        \beta_{00} &= \sum_{i,j,k} u_{ji} d_{ii} v_{ik} \ket{j}\ket{k}\\
+        \intertext{Para tener la matriz 'A' reescribimos}
+        \beta_{00} &= \frac{1}{\sqrt{2}}(\ket{00} \bm{+} \ket{11})\\
+        \intertext{Como:}
+        \beta_{00} &= \sum_{j,k} a_{jk} \ket{j}\ket{k} \text{ con } \\
+        a_{00}&=a_{11}=\frac{1}{\sqrt{2}} \text{ y } a_{01}=a_{10}=0\\
+        \intertext{Nos queda entonces:}
+        A &= \frac{1}{\sqrt{2}}
+            \begin{bmatrix}
+                1 & 0 \\
+                0 & 1 \\
+            \end{bmatrix}
+            \text{      ,       }
+        A^TA = \frac{1}{2}
+            \begin{bmatrix}
+                1 & 0 \\
+                0 & 1 \\
+            \end{bmatrix}\\
+            \intertext{Autovalores y Autovectores, valores singulares: } \lambda &= \frac{1}{2} \text{ ; } \sigma = \frac{1}{\sqrt{2}} \text{ ; } 
+             \Bigg\{ \underbrace{\begin{bmatrix} 1 \\ 0 \end{bmatrix}}_{v_1} \text{ , } \underbrace{\begin{bmatrix} 0 \\ 1 \end{bmatrix}}_{\text{v2}}\Bigg\} \\
+             \{u_1, u_2 \} &= \begin{cases} Av_1 = \sigma u_1 \\ Av_2 = \sigma u_2 \end{cases} = \Bigg\{ \underbrace{\begin{bmatrix} 1 \\ 0 \end{bmatrix}}_{u_1} \text{ , } \underbrace{\begin{bmatrix} 0 \\ 1 \end{bmatrix}}_{\text{u2}}\Bigg\} \\
+            \intertext{Por lo que nos queda: }
+             u &=
+            \begin{bmatrix}
+                1 & 0 \\
+                0 & 1 \\
+            \end{bmatrix}
+            \text{      ,       }
+            d = 
+            \begin{bmatrix}
+                \frac{1}{\sqrt{2}} & 0 \\
+                0 & \frac{1}{\sqrt{2}} \\
+            \end{bmatrix}
+            \text{      ,       }
+            v = 
+            \begin{bmatrix}
+                1 & 0 \\
+                0 & 1 \\
+            \end{bmatrix}\\
+            \intertext{Tomamos luego,}
+            \ket{i_A} &= \sum_{j} u_{ji} \ket{j-1} \text{ , } \ket{i_B} = \sum_{k} v_{ik} \ket{k-1}\text{ , } \lambda_i = d_{ii} = \frac{1}{\sqrt{2}}\\
+            \intertext{Entonces}
+            \beta_{00} &= \sum_{i} \lambda_i \ket{i_A}\ket{i_B}\\
+                       &= \frac{1}{\sqrt{2}}(\underbrace{u_{11} v_{11}}_{=1} \ket{00}) + \frac{1}{\sqrt{2}}(\underbrace{u_{22} v_{22}}_{=1} \ket{11})
+    \end{align*}
+    Este caso es muy trivial, pero sirve para mostrar una descomposición de Schmidt simple.\\
+    
+    \item{Descomposición para $\ket{\psi} \frac{1}{\sqrt{3}}(\ket{00} + \ket{01} + \ket{11})$}\\
+        Queremos llegar a:\\
+    \begin{align*}
+        \ket{\psi} &= \frac{1}{\sqrt{3}}(\ket{00} + \ket{01} + \ket{11}) = \sum_{j,k} a_{jk} \ket{j}\ket{k}\\
+        \intertext{Es decir,}
+        A &= 
+            \begin{bmatrix}
+                \frac{1}{\sqrt{3}} & \frac{1}{\sqrt{3}} \\
+                0 & \frac{1}{\sqrt{3}} \\
+            \end{bmatrix}\\
+        \intertext{La descomposición en valores singulares, $a = udv$, nos queda}
+    \end{align*}
+    \[
+         u \approx
+        \begin{bmatrix}
+            0.850651 & -0.525731 \\
+            0.525731 & 0.850651 \\
+        \end{bmatrix}
+        \text{      ,       }
+        d \approx 
+        \begin{bmatrix}
+            0.934172 & 0 \\
+            0 & 0.356822 \\
+        \end{bmatrix}
+        \text{      ,       }
+        v \approx 
+        \begin{bmatrix}
+            0.525731 & -0.850651 \\
+            0.850651 & 0.525731 \\
+        \end{bmatrix}\\
+    \]
+    \begin{align*}
+        \intertext{Tomamos luego,}
+        \ket{i_A} &= \sum_{j} u_{ji}\ket{j-1} \text{ , } \ket{i_B} = \sum_{k} v_{ik}\ket{k-1} \text{ , } \lambda_i = d_{ii} \approx \{0.934172, 0.356822\}\\
+        \intertext{Luego}
+        \ket{\psi} &= \sum_{i} \lambda_i \ket{i_A}\ket{i_B}= \lambda_1 \ket{1_A}\ket{1_B} + \lambda_2 \ket{2_A}\ket{2_B}\\
+        \intertext{Con: }
+        &\ket{1_A} = u_{11} \ket{0} + u_{21} \ket{1} \textbf{, }   \ket{2_A} = u_{12}\ket{0} + u_{22} \ket{1}\\
+        &\ket{1_B} = v_{11} \ket{0} + v_{12} \ket{1}\textbf{, }  \ket{2_B} = v_{21} \ket{0} + v_{22} \ket{1}\\
+        &\lambda_1 \approx 0.934172  \textbf{, } \lambda_2 \approx 0.356822\\
+        &u_{11} \approx 0.850651 \textbf{, } u_{22}  \approx 0.850651 \textbf{, }  u_{12} \approx -0.525731 \textbf{, } u_{21} \approx 0.525731 \\
+        &v_{11} \approx 0.525731 \textbf{, } v_{22} \approx 0.525731 \textbf{, }  v_{12} \approx -0.850651 \textbf{, } v_{21} \approx 0.850651 
+    \end{align*}
+  \end{enumerate}
+\end{document}
